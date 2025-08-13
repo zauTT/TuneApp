@@ -19,13 +19,11 @@ final class SettingsViewController: UIViewController {
     }
 
     private func setupUI() {
-        // Header
         let header = UILabel()
         header.text = "Settings"
         header.font = .systemFont(ofSize: 22, weight: .semibold)
         header.textAlignment = .center
-
-        // Instruments - horizontal scroll
+        
         let instrumentStack = UIStackView()
         instrumentStack.axis = .horizontal
         instrumentStack.spacing = 12
@@ -50,8 +48,7 @@ final class SettingsViewController: UIViewController {
 
         view.addSubview(header)
         view.addSubview(scroll)
-
-        // Tunings list
+        
         let tuningsStack = UIStackView()
         tuningsStack.axis = .vertical
         tuningsStack.spacing = 12
@@ -90,7 +87,6 @@ final class SettingsViewController: UIViewController {
 
     @objc private func instrumentTapped(_ sender: UIButton) {
         if sender.backgroundColor == .systemBlue {
-            // active
             return
         }
         let alert = UIAlertController(title: "Coming soon", message: "More instruments will be available in a future update.", preferredStyle: .alert)

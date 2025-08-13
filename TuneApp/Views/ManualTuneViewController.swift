@@ -49,11 +49,18 @@ final class ManualTuneViewController: UIViewController {
 
     @objc private func playString(_ sender: UIButton) {
         guard let title = sender.currentTitle else { return }
-        // For prototype: synthesize a sine wave tone for the target frequency
         let freq = Tuning.standardGuitarFrequencies[title] ?? 440.0
         TonePlayer.shared.play(frequency: freq, duration: 1.5)
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        UIView.animate(withDuration: 0.1, animations: {
+            sender.alpha = 0.7
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                sender.alpha = 1.0
+            }
+        }
     }
-
+    
     @objc private func openSettings() {
         let settings = SettingsViewController()
         settings.modalPresentationStyle = .pageSheet

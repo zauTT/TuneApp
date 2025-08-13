@@ -59,8 +59,7 @@ final class AutoTuneViewController: UIViewController {
             stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-
-        // Settings button (equalizer) - top right
+        
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"), style: .plain, target: self, action: #selector(openSettings))
         navigationItem.rightBarButtonItem = settingsButton
     }
