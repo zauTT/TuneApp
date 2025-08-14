@@ -12,6 +12,7 @@ final class AutoTuneViewController: UIViewController {
     private let noteLabel = UILabel()
     private let freqLabel = UILabel()
     private let centsLabel = UILabel()
+    private let statusLabel = UILabel()
     private let viewModel = TunerViewModel()
 
     override func viewDidLoad() {
@@ -25,6 +26,17 @@ final class AutoTuneViewController: UIViewController {
             self?.noteLabel.text = name
             self?.freqLabel.text = freq
             self?.centsLabel.text = String(format: "%.1f cents", cents)
+            
+            if cents < -5 {
+                self?.statusLabel.text = "Too flat, tune up"
+                self?.statusLabel.textColor = .systemOrange
+            } else if cents > 5 {
+                self?.statusLabel.text = "Too sharp, tune down"
+                self?.statusLabel.textColor = .systemRed
+            } else {
+                self?.statusLabel.text = "Perfect!"
+                self?.statusLabel.textColor = .systemGreen
+            }
         }
     }
 
@@ -48,7 +60,10 @@ final class AutoTuneViewController: UIViewController {
         centsLabel.font = UIFont.systemFont(ofSize: 16)
         centsLabel.textAlignment = .center
         
-        let stack = UIStackView(arrangedSubviews: [noteLabel, freqLabel, centsLabel])
+        statusLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        statusLabel.textAlignment = .center
+
+        let stack = UIStackView(arrangedSubviews: [noteLabel, freqLabel, centsLabel, statusLabel])
         stack.axis = .vertical
         stack.spacing = 12
         stack.alignment = .center
