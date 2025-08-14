@@ -47,7 +47,7 @@ final class AutoTuneViewController: UIViewController {
 
         centsLabel.font = UIFont.systemFont(ofSize: 16)
         centsLabel.textAlignment = .center
-
+        
         let stack = UIStackView(arrangedSubviews: [noteLabel, freqLabel, centsLabel])
         stack.axis = .vertical
         stack.spacing = 12
