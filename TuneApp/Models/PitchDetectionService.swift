@@ -38,7 +38,11 @@ final class PitchDetectionService {
             
             var samples = [Double](repeating: 0, count: frameLength)
             for i in 0..<frameLength { samples[i] = Double(channelData[i]) }
-
+            
+            samples = strong.highPassFilter(samples: samples, cutoff: 110, sampleRate: strong.sampleRate)
+            
+            samples = strong.applyNoiseGate(samples: samples, threshold: 0.25)
+            
             if let freq = strong.autoCorrelate(samples: samples, sampleRate: Int(strong.sampleRate)) {
                 DispatchQueue.main.async {
                     strong.onFrequencyDetected?(freq)
@@ -61,6 +65,28 @@ final class PitchDetectionService {
     deinit {
         stop()
     }
+    
+    //MARK: - Noise Suppression
+    
+    private func highPassFilter(samples: [Double], cutoff: Double, sampleRate: Double) -> [Double] {
+        let rc = 1.0 / (2 * Double.pi * cutoff)
+        let dt = 1.0 / sampleRate
+        let alpha = rc / (rc + dt)
+        
+        var filtered = [Double](repeating: 0, count: samples.count)
+        filtered[0] = samples[0]
+        
+        for i in 1..<samples.count {
+            filtered[i] = alpha * (filtered[i-1] + samples[i] - samples[i-1])
+        }
+        
+        return filtered
+    }
+    
+    private func applyNoiseGate(samples: [Double], threshold: Double) -> [Double] {
+        return samples.map { abs($0) < threshold ? 0 : $0 }
+    }
+
 
     // MARK: - Autocorrelation-based pitch detection
     private func autoCorrelate(samples: [Double], sampleRate: Int) -> Double? {
