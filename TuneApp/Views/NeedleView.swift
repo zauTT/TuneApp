@@ -25,10 +25,44 @@ final class NeedleView: UIView {
     }
 
     private func setupNeedle() {
-        needle.backgroundColor = .systemRed
         needle.frame = CGRect(x: bounds.midX - 1, y: bounds.midY - 50, width: 2, height: 100)
         needle.layer.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         addSubview(needle)
+    }
+
+    private func updateNeedle(to angle: CGFloat) {
+        UIView.animate(withDuration: 0.1) {
+            self.needle.transform = CGAffineTransform(rotationAngle: angle)
+        }
+        
+        let color: UIColor
+        let normalizedAngle = (angle + .pi / 4) / (.pi / 2)
+        if normalizedAngle < 0.5 {
+            let t = normalizedAngle * 2
+            color = interpolate(from: .systemBlue, to: .systemGreen, alpha: t)
+        } else {
+            let t = (normalizedAngle - 0.5) * 2
+            color = interpolate(from: .systemGreen, to: .systemRed, alpha: t)
+        }
+        
+        UIView.transition(with: needle, duration: 0.1, options: .transitionCrossDissolve, animations: {
+            self.needle.backgroundColor = color
+        }, completion: nil)
+    }
+    
+    private func interpolate(from color1: UIColor, to color2: UIColor, alpha t: CGFloat) -> UIColor {
+        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
+        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0
+
+        color1.getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        color2.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+
+        return UIColor(
+            red: r1 + (r2 - r1) * t,
+            green: g1 + (g2 - g1) * t,
+            blue: b1 + (b2 - b1) * t,
+            alpha: a1 + (a2 - a1) * t
+        )
     }
     
     override func layoutSubviews() {
@@ -95,8 +129,6 @@ final class NeedleView: UIView {
     func update(cents: Double) {
         let clamped = max(-50, min(50, cents))
         let angle = CGFloat(clamped / 50) * (.pi / 4)
-        UIView.animate(withDuration: 0.1) {
-            self.needle.transform = CGAffineTransform(rotationAngle: angle)
-        }
+        updateNeedle(to: angle)
     }
 }
