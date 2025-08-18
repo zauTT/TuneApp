@@ -33,7 +33,7 @@ final class MainMenuViewController: UIViewController {
         view.addSubview(autoButton)
         autoButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if let image = UIImage(named: "guitar") {
+        if let image = UIImage(named: "GuitarMinimal") {
             autoImageView.image = image
         }
         
@@ -72,7 +72,7 @@ final class MainMenuViewController: UIViewController {
         view.addSubview(manualButton)
         manualButton.translatesAutoresizingMaskIntoConstraints = false
         
-        if let image = UIImage(named: "ear") {
+        if let image = UIImage(named: "minimalEar") {
             manualImageView.image = image
         }
         

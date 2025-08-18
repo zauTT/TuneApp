@@ -22,7 +22,7 @@ struct NoteUtilities {
         let names = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
         let name = names[midi % 12]
         let octave = (midi / 12) - 1
-        return "\(name)\(octave)"
+        return "\(name) - \(octave)"
     }
     
     static func closestNote(for frequency: Double) -> (name: String, targetFreq: Double, midi: Int)? {

@@ -9,7 +9,7 @@
 import UIKit
 
 final class SettingsViewController: UIViewController {
-    private let instruments = [("Guitar", true), ("Ukulele", false), ("Bass", false)]
+    private let instruments = [("guitar_icon", true), ("ukulele_icon", false), ("bass_icon", false)]
     private let tunings = [("Standard", true), ("Drop D", false), ("Open G", false)]
 
     override func viewDidLoad() {
@@ -17,7 +17,7 @@ final class SettingsViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupUI()
     }
-
+    
     private func setupUI() {
         let header = UILabel()
         header.text = "Settings"
@@ -26,19 +26,41 @@ final class SettingsViewController: UIViewController {
         
         let instrumentStack = UIStackView()
         instrumentStack.axis = .horizontal
-        instrumentStack.spacing = 12
+        instrumentStack.spacing = 40
         instrumentStack.alignment = .center
 
-        for item in instruments {
+        for (index, item) in instruments.enumerated() {
             let btn = UIButton(type: .system)
-            btn.setTitle(item.0, for: .normal)
+            if let image = UIImage(named: item.0) {
+                let resized = image.withRenderingMode(.alwaysOriginal)
+                btn.setImage(resized, for: .normal)
+            }
             btn.layer.cornerRadius = 10
             btn.backgroundColor = item.1 ? .systemBlue : .secondarySystemBackground
-            btn.tintColor = item.1 ? .white : .label
-            btn.widthAnchor.constraint(equalToConstant: 120).isActive = true
-            btn.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            btn.imageView?.contentMode = .scaleAspectFit
+            
+            btn.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            btn.heightAnchor.constraint(equalTo: btn.widthAnchor).isActive = true
+            
             btn.addTarget(self, action: #selector(instrumentTapped(_:)), for: .touchUpInside)
-            instrumentStack.addArrangedSubview(btn)
+            
+            let label = UILabel()
+            label.textAlignment = .center
+            label.font = .systemFont(ofSize: 14, weight: .medium)
+            label.textColor = .label
+            switch index {
+            case 0: label.text = "Guitar"
+            case 1: label.text = "Ukulele"
+            case 2: label.text = "Bass"
+            default: break
+            }
+            
+            let vStack = UIStackView(arrangedSubviews: [btn, label])
+            vStack.axis = .vertical
+            vStack.alignment = .center
+            vStack.spacing = 10
+            
+            instrumentStack.addArrangedSubview(vStack)
         }
 
         let scroll = UIScrollView()
@@ -74,7 +96,7 @@ final class SettingsViewController: UIViewController {
             container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             container.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
-
+        
         NSLayoutConstraint.activate([
             instrumentStack.topAnchor.constraint(equalTo: scroll.topAnchor),
             instrumentStack.leadingAnchor.constraint(equalTo: scroll.leadingAnchor),
@@ -82,7 +104,7 @@ final class SettingsViewController: UIViewController {
             instrumentStack.bottomAnchor.constraint(equalTo: scroll.bottomAnchor),
             instrumentStack.heightAnchor.constraint(equalTo: scroll.heightAnchor)
         ])
-        scroll.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        scroll.heightAnchor.constraint(equalToConstant: 120).isActive = true
     }
 
     @objc private func instrumentTapped(_ sender: UIButton) {
