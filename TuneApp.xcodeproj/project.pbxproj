@@ -37,6 +37,18 @@
 			);
 			target = F1B3E9702E4B623A00475D83 /* TuneApp */;
 		};
+		F1E3CC5E2E59E3C90021A854 /* Exceptions for "TuneApp" folder in "TuneAppTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resources/Standard/aString.wav,
+				Resources/Standard/bString.wav,
+				Resources/Standard/dString.wav,
+				Resources/Standard/gString.wav,
+				Resources/Standard/highEString.wav,
+				Resources/Standard/LowEString.wav,
+			);
+			target = F1B3E9862E4B623C00475D83 /* TuneAppTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +56,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				F1B3E9992E4B623C00475D83 /* Exceptions for "TuneApp" folder in "TuneApp" target */,
+				F1E3CC5E2E59E3C90021A854 /* Exceptions for "TuneApp" folder in "TuneAppTests" target */,
 			);
 			path = TuneApp;
 			sourceTree = "<group>";

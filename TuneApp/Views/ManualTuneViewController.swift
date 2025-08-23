@@ -49,8 +49,24 @@ final class ManualTuneViewController: UIViewController {
     
     @objc private func playString(_ sender: UIButton) {
         guard let title = sender.currentTitle else { return }
-        let freq = Tuning.standardGuitarFrequencies[title] ?? 440.0
-        TonePlayer.shared.play(frequency: freq, duration: 1.5)
+        
+        let fileMap: [String: String] = [
+            "Low E": "LowEString",
+            "A": "aString",
+            "D": "dString",
+            "G": "gString",
+            "B": "bString",
+            "High E": "highEString"
+        ]
+
+        if let fileName = fileMap[title] {
+            SamplePlayer.shared.playSample(named: fileName)
+        } else {
+            print("No recording found for \(title), falling back to tone generator")
+            let freq = Tuning.standardGuitarFrequencies[title] ?? 440.0
+            TonePlayer.shared.play(frequency: freq, duration: 1.5)
+        }
+        
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         UIView.animate(withDuration: 0.1, animations: {
             sender.alpha = 0.7
