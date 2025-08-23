@@ -10,25 +10,25 @@ import UIKit
 import AVFoundation
 
 final class ManualTuneViewController: UIViewController {
-    private let strings = ["E2","A2","D3","G3","B3","E4"]
-
+    private let strings = ["Low E","A","D","G","B","High E"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         title = "Manual Tune"
-
+        
         setupUI()
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"), style: .plain, target: self, action: #selector(openSettings))
         navigationItem.rightBarButtonItem = settingsButton
     }
-
+    
     private func setupUI() {
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 12
         stack.alignment = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
-
+        
         for s in strings {
             let btn = UIButton(type: .system)
             btn.setTitle(s, for: .normal)
@@ -38,7 +38,7 @@ final class ManualTuneViewController: UIViewController {
             btn.addTarget(self, action: #selector(playString(_:)), for: .touchUpInside)
             stack.addArrangedSubview(btn)
         }
-
+        
         view.addSubview(stack)
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -46,7 +46,7 @@ final class ManualTuneViewController: UIViewController {
             stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
-
+    
     @objc private func playString(_ sender: UIButton) {
         guard let title = sender.currentTitle else { return }
         let freq = Tuning.standardGuitarFrequencies[title] ?? 440.0
