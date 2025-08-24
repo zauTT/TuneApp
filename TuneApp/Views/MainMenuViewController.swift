@@ -11,11 +11,14 @@ import UIKit
 final class MainMenuViewController: UIViewController {
     private let autoButton = UIButton(type: .system)
     private let manualButton = UIButton(type: .system)
+    private let metronomeButton = UIButton(type: .system)
     
     private let autoTuneLabel = UILabel()
     private let autoImageView = UIImageView()
     private let manualLabel = UILabel()
     private let manualImageView = UIImageView()
+    private let metronomeLabel = UILabel()
+    private let metronomeImageView = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,9 +27,11 @@ final class MainMenuViewController: UIViewController {
         
         setupAutoTuneButton()
         setupManualButton()
+        setupMetronomeButton()
 
         autoButton.addTarget(self, action: #selector(openAuto), for: .touchUpInside)
         manualButton.addTarget(self, action: #selector(openManual), for: .touchUpInside)
+        metronomeButton.addTarget(self, action: #selector(openMetronome), for: .touchUpInside)
     }
     
     private func setupAutoTuneButton() {
@@ -98,12 +103,49 @@ final class MainMenuViewController: UIViewController {
             
             manualImageView.topAnchor.constraint(equalTo: manualButton.topAnchor, constant: 5),
             manualImageView.bottomAnchor.constraint(equalTo: manualButton.bottomAnchor, constant: -5),
-            manualImageView.leadingAnchor.constraint(equalTo: manualButton.leadingAnchor, constant: 50),
+            manualImageView.leadingAnchor.constraint(equalTo: manualButton.leadingAnchor, constant: 30),
             manualImageView.widthAnchor.constraint(equalToConstant: 90),
             
             manualLabel.trailingAnchor.constraint(equalTo: manualButton.trailingAnchor, constant: -10),
             manualLabel.bottomAnchor.constraint(equalTo: manualButton.bottomAnchor, constant: -10),
+        ])
+    }
+    
+    private func setupMetronomeButton() {
+        view.addSubview(metronomeButton)
+        metronomeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let image = UIImage(named: "metronome") {
+            metronomeImageView.image = image
+        }
+        
+        metronomeButton.backgroundColor = .systemCyan
+        metronomeButton.layer.cornerRadius = 8
+        metronomeButton.clipsToBounds = true
+        
+        metronomeButton.addSubview(metronomeImageView)
+        metronomeImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        metronomeButton.addSubview(metronomeLabel)
+        metronomeLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        metronomeLabel.text = "Metronome"
+        metronomeLabel.textColor = .white
+        metronomeLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
+        
+        NSLayoutConstraint.activate([
+            metronomeButton.topAnchor.constraint(equalTo: manualButton.bottomAnchor, constant: 25),
+            metronomeButton.trailingAnchor.constraint(equalTo: manualButton.trailingAnchor),
+            metronomeButton.leadingAnchor.constraint(equalTo: manualButton.leadingAnchor),
+            metronomeButton.heightAnchor.constraint(equalTo: manualButton.heightAnchor),
             
+            metronomeImageView.topAnchor.constraint(equalTo: metronomeButton.topAnchor, constant: 5),
+            metronomeImageView.bottomAnchor.constraint(equalTo: metronomeButton.bottomAnchor, constant: -5),
+            metronomeImageView.leadingAnchor.constraint(equalTo: metronomeButton.leadingAnchor, constant: 30),
+            metronomeImageView.widthAnchor.constraint(equalToConstant: 90),
+            
+            metronomeLabel.trailingAnchor.constraint(equalTo: metronomeButton.trailingAnchor, constant: -10),
+            metronomeLabel.bottomAnchor.constraint(equalTo: metronomeButton.bottomAnchor, constant: -10),
         ])
     }
     
@@ -114,6 +156,11 @@ final class MainMenuViewController: UIViewController {
 
     @objc private func openManual() {
         let vc = ManualTuneViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func openMetronome() {
+        let vc = MetronomeViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
