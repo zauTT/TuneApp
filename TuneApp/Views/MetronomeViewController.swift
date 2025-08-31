@@ -10,6 +10,14 @@ import AVFoundation
 
 final class MetronomeViewController: UIViewController {
     
+    private let beatCircle: UIView = {
+        let v = UIView()
+        v.backgroundColor = .systemCyan
+        v.alpha = 0.8
+        v.layer.cornerRadius = 100
+        return v
+    }()
+    
     private let bpmLabel: UILabel = {
         let label = UILabel()
         label.text = "BPM: 100"
@@ -62,16 +70,23 @@ final class MetronomeViewController: UIViewController {
     }
     
     private func setupLayout() {
+        view.addSubview(beatCircle)
         view.addSubview(bpmLabel)
         view.addSubview(bpmSlider)
         view.addSubview(startStopButton)
         
+        beatCircle.translatesAutoresizingMaskIntoConstraints = false
         bpmLabel.translatesAutoresizingMaskIntoConstraints = false
         bpmSlider.translatesAutoresizingMaskIntoConstraints = false
         startStopButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            bpmLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            beatCircle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            beatCircle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            beatCircle.widthAnchor.constraint(equalToConstant: 200),
+            beatCircle.heightAnchor.constraint(equalToConstant: 200),
+            
+            bpmLabel.topAnchor.constraint(equalTo: beatCircle.bottomAnchor, constant: 100),
             bpmLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             bpmSlider.topAnchor.constraint(equalTo: bpmLabel.bottomAnchor, constant: 30),
@@ -115,6 +130,17 @@ final class MetronomeViewController: UIViewController {
     private func playClick() {
         audioPlayer?.currentTime = 0
         audioPlayer?.play()
+        animateBeatCircle()
+    }
+    
+    private func animateBeatCircle() {
+        UIView.animate(withDuration: 0.1,
+                       animations: {
+                           self.beatCircle.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+                       }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.beatCircle.transform = .identity
+            }
+        }
     }
 }
-
