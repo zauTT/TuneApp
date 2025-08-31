@@ -146,6 +146,10 @@ final class MetronomeViewController: UIViewController {
     
     private func startMetronome() {
         stopMetronome()
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
         let interval = 60.0 / Double(bpm)
         timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
             self?.playClick()
@@ -153,6 +157,8 @@ final class MetronomeViewController: UIViewController {
     }
     
     private func stopMetronome() {
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
         timer?.invalidate()
         timer = nil
     }
