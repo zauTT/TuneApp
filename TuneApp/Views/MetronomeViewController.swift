@@ -44,8 +44,13 @@ final class MetronomeViewController: UIViewController {
         return button
     }()
     
+    private let clickButton = MetronomeViewController.makeSoundButton(title: "Click")
+    private let clapButton = MetronomeViewController.makeSoundButton(title: "Clap")
+    private let snareButton = MetronomeViewController.makeSoundButton(title: "Snare")
+    
     private var timer: Timer?
     private var audioPlayer: AVAudioPlayer?
+    private var currentSound: String = "click"
     private var bpm: Int = 100 {
         didSet {
             bpmLabel.text = "BPM: \(bpm)"
@@ -63,10 +68,24 @@ final class MetronomeViewController: UIViewController {
         bpmSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
         startStopButton.addTarget(self, action: #selector(toggleMetronome), for: .touchUpInside)
         
-        if let soundURL = Bundle.main.url(forResource: "click", withExtension: "wav") {
-            audioPlayer = try? AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.prepareToPlay()
-        }
+        clickButton.addTarget(self, action: #selector(selectClick), for: .touchUpInside)
+        clapButton.addTarget(self, action: #selector(comingSoonTapped), for: .touchUpInside)
+        snareButton.addTarget(self, action: #selector(comingSoonTapped), for: .touchUpInside)
+        
+        loadSound(named: currentSound)
+        highlightSelectedButton(clickButton)
+    }
+    
+    private static func makeSoundButton(title: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(title, for: .normal)
+        button.backgroundColor = .secondarySystemBackground
+        button.setTitleColor(.label, for: .normal)
+        button.layer.cornerRadius = 8
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        button.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        return button
     }
     
     private func setupLayout() {
@@ -75,10 +94,18 @@ final class MetronomeViewController: UIViewController {
         view.addSubview(bpmSlider)
         view.addSubview(startStopButton)
         
+        let soundStack = UIStackView(arrangedSubviews: [clickButton, clapButton, snareButton])
+        soundStack.axis = .horizontal
+        soundStack.spacing = 20
+        soundStack.alignment = .center
+        soundStack.distribution = .equalSpacing
+        view.addSubview(soundStack)
+        
         beatCircle.translatesAutoresizingMaskIntoConstraints = false
         bpmLabel.translatesAutoresizingMaskIntoConstraints = false
         bpmSlider.translatesAutoresizingMaskIntoConstraints = false
         startStopButton.translatesAutoresizingMaskIntoConstraints = false
+        soundStack.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             beatCircle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -96,7 +123,10 @@ final class MetronomeViewController: UIViewController {
             startStopButton.topAnchor.constraint(equalTo: bpmSlider.bottomAnchor, constant: 40),
             startStopButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             startStopButton.widthAnchor.constraint(equalToConstant: 120),
-            startStopButton.heightAnchor.constraint(equalToConstant: 50)
+            startStopButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            soundStack.topAnchor.constraint(equalTo: startStopButton.bottomAnchor, constant: 100),
+            soundStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
@@ -142,5 +172,41 @@ final class MetronomeViewController: UIViewController {
                 self.beatCircle.transform = .identity
             }
         }
+    }
+    
+    // MARK: - Sound Handling
+    
+    @objc private func selectClick() {
+        currentSound = "click"
+        loadSound(named: currentSound)
+        highlightSelectedButton(clickButton)
+    }
+
+    @objc private func comingSoonTapped(_ sender: UIButton) {
+        showAlert(title: "Coming Soon", message: "More sounds will be available in a future update.")
+    }
+    
+    private func highlightSelectedButton(_ selected: UIButton) {
+        [clickButton, clapButton, snareButton].forEach { btn in
+            btn.backgroundColor = .secondarySystemBackground
+            btn.setTitleColor(.label, for: .normal)
+        }
+        selected.backgroundColor = .systemCyan
+        selected.setTitleColor(.white, for: .normal)
+    }
+    
+    private func loadSound(named: String) {
+        if let url = Bundle.main.url(forResource: named, withExtension: "wav") {
+            audioPlayer = try? AVAudioPlayer(contentsOf: url)
+            audioPlayer?.prepareToPlay()
+        } else {
+            print("⚠️ Sound file \(named).wav not found")
+        }
+    }
+    
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
