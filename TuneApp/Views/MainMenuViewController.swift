@@ -12,6 +12,7 @@ final class MainMenuViewController: UIViewController {
     private let autoButton = UIButton(type: .system)
     private let manualButton = UIButton(type: .system)
     private let metronomeButton = UIButton(type: .system)
+    private let scalesButton = UIButton(type: .system)
     
     private let autoTuneLabel = UILabel()
     private let autoImageView = UIImageView()
@@ -19,6 +20,8 @@ final class MainMenuViewController: UIViewController {
     private let manualImageView = UIImageView()
     private let metronomeLabel = UILabel()
     private let metronomeImageView = UIImageView()
+    private let scalesLabel = UILabel()
+    private let scalesImageView = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +31,12 @@ final class MainMenuViewController: UIViewController {
         setupAutoTuneButton()
         setupManualButton()
         setupMetronomeButton()
+        setupScalesButton()
 
         autoButton.addTarget(self, action: #selector(openAuto), for: .touchUpInside)
         manualButton.addTarget(self, action: #selector(openManual), for: .touchUpInside)
         metronomeButton.addTarget(self, action: #selector(openMetronome), for: .touchUpInside)
+        scalesButton.addTarget(self, action: #selector(openScales), for: .touchUpInside)
     }
     
     private func setupAutoTuneButton() {
@@ -55,7 +60,6 @@ final class MainMenuViewController: UIViewController {
         autoTuneLabel.text = "Auto Tune"
         autoTuneLabel.textColor = .white
         autoTuneLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
-        
         
         NSLayoutConstraint.activate([
             autoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
@@ -149,6 +153,44 @@ final class MainMenuViewController: UIViewController {
         ])
     }
     
+    private func setupScalesButton() {
+        view.addSubview(scalesButton)
+        scalesButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if let image = UIImage(named: "scale_img") {
+            scalesImageView.image = image
+        }
+        
+        scalesButton.backgroundColor = .systemPurple
+        scalesButton.layer.cornerRadius = 8
+        scalesButton.clipsToBounds = true
+        
+        scalesButton.addSubview(scalesImageView)
+        scalesImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        scalesButton.addSubview(scalesLabel)
+        scalesLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        scalesLabel.text = "Scales"
+        scalesLabel.textColor = .white
+        scalesLabel.font = UIFont.systemFont(ofSize: 32, weight: .medium)
+        
+        NSLayoutConstraint.activate([
+            scalesButton.topAnchor.constraint(equalTo: metronomeButton.bottomAnchor, constant: 25),
+            scalesButton.trailingAnchor.constraint(equalTo: manualButton.trailingAnchor),
+            scalesButton.leadingAnchor.constraint(equalTo: manualButton.leadingAnchor),
+            scalesButton.heightAnchor.constraint(equalTo: manualButton.heightAnchor),
+            
+            scalesImageView.topAnchor.constraint(equalTo: scalesButton.topAnchor, constant: 0),
+            scalesImageView.bottomAnchor.constraint(equalTo: scalesButton.bottomAnchor, constant: -0),
+            scalesImageView.leadingAnchor.constraint(equalTo: scalesButton.leadingAnchor, constant: 30),
+            scalesImageView.widthAnchor.constraint(equalToConstant: 75),
+            
+            scalesLabel.trailingAnchor.constraint(equalTo: scalesButton.trailingAnchor, constant: -10),
+            scalesLabel.bottomAnchor.constraint(equalTo: scalesButton.bottomAnchor, constant: -10),
+        ])
+    }
+    
     @objc private func openAuto() {
         let vc = AutoTuneViewController()
         navigationController?.pushViewController(vc, animated: true)
@@ -161,6 +203,11 @@ final class MainMenuViewController: UIViewController {
     
     @objc private func openMetronome() {
         let vc = MetronomeViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func openScales() {
+        let vc = ScalesViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
 }
