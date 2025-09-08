@@ -10,9 +10,7 @@ import UIKit
 
 final class AutoTuneViewController: UIViewController {
     
-//    private let needleView = NeedleView()
     private let ballView = BallView()
-
     private let viewModel = TunerViewModel()
     
     private let noteLabel = UILabel()
@@ -31,7 +29,6 @@ final class AutoTuneViewController: UIViewController {
             self?.noteLabel.text = name
             self?.freqLabel.text = freq
             self?.centsLabel.text = String(format: "%.1f cents", cents)
-//            self?.needleView.update(cents: cents)
             self?.ballView.update(cents: cents)
             
             
