@@ -44,7 +44,7 @@ final class ScalesViewController: UIViewController {
         view.addSubview(essentialLabel)
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 120, height: 150)
+        layout.itemSize = CGSize(width: 110, height: 140)
         layout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)

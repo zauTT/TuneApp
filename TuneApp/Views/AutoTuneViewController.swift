@@ -10,7 +10,9 @@ import UIKit
 
 final class AutoTuneViewController: UIViewController {
     
-    private let needleView = NeedleView()
+//    private let needleView = NeedleView()
+    private let ballView = BallView()
+
     private let viewModel = TunerViewModel()
     
     private let noteLabel = UILabel()
@@ -29,7 +31,9 @@ final class AutoTuneViewController: UIViewController {
             self?.noteLabel.text = name
             self?.freqLabel.text = freq
             self?.centsLabel.text = String(format: "%.1f cents", cents)
-            self?.needleView.update(cents: cents)
+//            self?.needleView.update(cents: cents)
+            self?.ballView.update(cents: cents)
+            
             
             if cents < -5.7 {
                 self?.statusLabel.text = "Too flat, tune up"
@@ -55,7 +59,7 @@ final class AutoTuneViewController: UIViewController {
     }
 
     private func setupUI() {
-        needleView.translatesAutoresizingMaskIntoConstraints = false
+        ballView.translatesAutoresizingMaskIntoConstraints = false
         noteLabel.font = UIFont.systemFont(ofSize: 60, weight: .bold)
         noteLabel.textAlignment = .center
 
@@ -65,7 +69,7 @@ final class AutoTuneViewController: UIViewController {
         centsLabel.font = UIFont.systemFont(ofSize: 16)
         centsLabel.textAlignment = .center
 
-        let stack = UIStackView(arrangedSubviews: [needleView, noteLabel, freqLabel, centsLabel, statusLabel])
+        let stack = UIStackView(arrangedSubviews: [ballView, noteLabel, freqLabel, centsLabel, statusLabel])
         stack.axis = .vertical
         stack.spacing = 20
         stack.alignment = .center
@@ -75,8 +79,8 @@ final class AutoTuneViewController: UIViewController {
         NSLayoutConstraint.activate([
             stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            needleView.widthAnchor.constraint(equalToConstant: 200),
-            needleView.heightAnchor.constraint(equalToConstant: 150)
+            ballView.widthAnchor.constraint(equalToConstant: 200),
+            ballView.heightAnchor.constraint(equalToConstant: 150)
         ])
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "slider.horizontal.3"), style: .plain, target: self, action: #selector(openSettings))
         navigationItem.rightBarButtonItem = settingsButton
